@@ -240,8 +240,27 @@ class Player extends Tile {
         return temp;
     }
 
-    move() {
+    /**
+     * @param {Tile} tile 
+     */
+    move(tile) {
+        let targetI = this.i;
+        let targetJ = this.j;
+        if (this.i === tile.i) {
+            if (this.j < tile.j) {
+                targetJ = Math.max(...globals.availableTiles.map(x => x.j));
+            } else if (this.j > tile.j) {
+                targetJ = Math.min(...globals.availableTiles.map(x => x.j));
+            }
+        } else if (this.j === tile.j) {
+            if (this.i < tile.i) {
+                targetI = Math.max(...globals.availableTiles.map(x => x.i));
+            } else if (this.i > tile.i) {
+                targetI = Math.min(...globals.availableTiles.map(x => x.i));
+            }
+        }
 
+        this.moveSpecific(targetI, targetJ);
     }
 
     moveSpecific(i, j) {
