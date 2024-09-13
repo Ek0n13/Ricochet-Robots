@@ -12,12 +12,12 @@
 */
 const globals = {
     boardSize: 16,
-    tiles: null,
+    tiles: [],
     size: 0,
     offsetWidth: 0,
     offsetHeight: 0,
     margin: 0.2,
-    players: null,
+    players: [],
     availableTiles: [],
 }
 
@@ -37,50 +37,17 @@ let availableTileClr = {
 
 
 function setup() {
+    // frameRate(1);
     // put setup code here
     createCanvas(windowWidth, window.innerHeight);
-    globals.players = [
-        new Player(0, 0, globals.size), // Red
-        new Player(4, 6, globals.size), // Green
-        new Player(4, 10, globals.size), // Blue
-        new Player(5, 5, globals.size) // Yellow
-    ];
 
-    globals.players[0].clr = {
-        R: 255,
-        G: 0,
-        B: 0,
-        A: 255
-    };
-    globals.players[1].clr = {
-        R: 0,
-        G: 255,
-        B: 0,
-        A: 255
-    };
-    globals.players[2].clr = {
-        R: 0,
-        G: 0,
-        B: 255,
-        A: 255
-    };
-    globals.players[3].clr = {
-        R: 255,
-        G: 255,
-        B: 0,
-        A: 255
-    };
-
-    globals.tiles = loadMap();
-    globals.size = calculateTileSize();
-
-    for (let i = 0; i < globals.players.length; i++) {
-        let player = globals.players[i];
-        player.moveSpecific(player.i, player.j);
-    }
+    loadMap();
+    loadPlayers();
+    calculateTileSize();
 }
 
 function draw() {
+    
     // put drawing code here
     background(200);
 
@@ -90,7 +57,7 @@ function draw() {
 
     drawTiles(globals.players);
 
-    drawTilesBorders(globals.tiles);
+    drawTilesBorders(globals.tiles);    
 }
 
 /**
@@ -116,12 +83,12 @@ function drawTilesBorders(array) {
 }
 
 
-/**
-* @param {KeyboardEvent} event 
-*/
-function keyPressed(event) {
-    event.preventDefault();
-}
+// /**
+// * @param {KeyboardEvent} event 
+// */
+// function keyPressed(event) {
+//     event.preventDefault();
+// }
 
 /**
 * @param {PointerEvent} event 
@@ -161,19 +128,18 @@ function mouseClicked(event) {
 
 function windowResized() {
     resizeCanvas(windowWidth, window.innerHeight);
-    globals.size = calculateTileSize();
+    calculateTileSize();
 }
 
 /**
 * @returns {Array<Array<Tile>>}
 */
 function loadMap() {
-    /** @type {Array<Array<Tile>>} */
-    let temp = []
     const cols = globals.boardSize;
     const rows = globals.boardSize;
+
     for (let i = 0; i < cols; i++) {
-        temp.push([]);
+        globals.tiles.push([]);
         for (let j = 0; j < rows; j++) {
             let tile = new Tile(i, j, 1);
             if (i === 0) {
@@ -188,28 +154,63 @@ function loadMap() {
             if (j === rows - 1) {
                 tile.sides.bottom = true;
             }
-            temp[i].push(tile);
+            globals.tiles[i].push(tile);
         }
     }
-    temp[7][7].sides.top = true;
-    temp[7][7].sides.left = true;
 
-    temp[7][8].sides.bottom = true;
-    temp[7][8].sides.left = true;
+    globals.tiles[7][7].sides.top = true;
+    globals.tiles[7][7].sides.left = true;
 
-    temp[8][7].sides.top = true;
-    temp[8][7].sides.right = true;
+    globals.tiles[7][8].sides.bottom = true;
+    globals.tiles[7][8].sides.left = true;
 
-    temp[8][8].sides.bottom = true;
-    temp[8][8].sides.right = true;
+    globals.tiles[8][7].sides.top = true;
+    globals.tiles[8][7].sides.right = true;
 
+    globals.tiles[8][8].sides.bottom = true;
+    globals.tiles[8][8].sides.right = true;
 
     // custom tiles
-    temp[9][6].sides.right = true;
-    temp[10][5].sides.left = true;
+    globals.tiles[9][6].sides.right = true;
+    globals.tiles[10][5].sides.left = true;
+}
 
+function loadPlayers() {
+    globals.players = [
+        new Player(0, 0, globals.size), // Red
+        new Player(4, 6, globals.size), // Green
+        new Player(4, 10, globals.size), // Blue
+        new Player(5, 5, globals.size) // Yellow
+    ];
 
-    return temp;
+    globals.players[0].clr = {
+        R: 255,
+        G: 0,
+        B: 0,
+        A: 255
+    };
+    globals.players[1].clr = {
+        R: 0,
+        G: 255,
+        B: 0,
+        A: 255
+    };
+    globals.players[2].clr = {
+        R: 0,
+        G: 0,
+        B: 255,
+        A: 255
+    };
+    globals.players[3].clr = {
+        R: 255,
+        G: 255,
+        B: 0,
+        A: 255
+    };
+
+    globals.players.forEach(player => {
+        globals.tiles[player.i][player.j].hasPlayer = true;
+    });
 }
 
 /**
@@ -218,10 +219,11 @@ function loadMap() {
 function calculateTileSize() {
     let smallSide = Math.min(windowWidth, windowHeight);
     let length = globals.tiles.length;
-    let size = smallSide / (length + globals.margin);
+    
+    globals.size = smallSide / (length + globals.margin);
 
-    globals.offsetWidth = (windowWidth / 2) - ((length * size) / 2);
-    globals.offsetHeight = (windowHeight / 2) - ((length * size) / 2);
+    globals.offsetWidth = (windowWidth / 2) - ((length * globals.size) / 2);
+    globals.offsetHeight = (windowHeight / 2) - ((length * globals.size) / 2);
 
     for (let i = 0; i < globals.tiles.length; i++) {
         for (let j = 0; j < globals.tiles[i].length; j++) {
@@ -229,16 +231,14 @@ function calculateTileSize() {
 
             tile.i = i;
             tile.j = j;
-            tile.size = size;
+            tile.size = globals.size;
         }
     }
 
     for (let i = 0; i < globals.players.length; i++) {
         let player = globals.players[i];
-        player.size = size;
+        player.size = globals.size;
     }
-
-    return size;
 }
 
 /**
