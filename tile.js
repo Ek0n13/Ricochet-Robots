@@ -12,13 +12,17 @@ class Tile {
     this.left = false;
   }
 
-  draw(size) {
+  draw(size, offset) {
     if (this.inside)
       fill(255, 0, 0);
     else
       fill(this.clr);
       
     this.x = (this.x / this.size) * size;
+    
+    // this moves the entire board :thinking_emoji
+    // this.x = offset + ((this.x / this.size) * size);
+    
     this.y = (this.y / this.size) * size;
     this.size = size;
     rect(this.x, this.y, this.size, this.size);
