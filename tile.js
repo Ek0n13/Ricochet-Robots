@@ -246,6 +246,7 @@ class Player extends Tile {
     move(tile) {
         let targetI = this.i;
         let targetJ = this.j;
+
         if (this.i === tile.i) {
             if (this.j < tile.j) {
                 targetJ = Math.max(...globals.availableTiles.map(x => x.j));
@@ -264,9 +265,39 @@ class Player extends Tile {
     }
 
     moveSpecific(i, j) {
+        let ease = 0.2;
+        let delay = 10;
+
         globals.tiles[this.i][this.j].hasPlayer = false;
-        this.i = i;
-        this.j = j;
-        globals.tiles[this.i][this.j].hasPlayer = true;
+        
+        if (this.j === j) {
+            let idI = setInterval(() => {
+                let sign = Math.sign(i - this.i);
+                this.i += ease * sign;
+                if (sign > 0 && this.i > i) {
+                    this.i = i;
+                    clearInterval(idI);
+                } else if (sign < 0 && this.i < i) {
+                    this.i = i;
+                    clearInterval(idI);
+                }
+            }, delay);
+        }
+        
+        if (this.i === i) {
+            let idJ = setInterval(() => {
+                let sign = Math.sign(j - this.j);
+                this.j += ease * sign;
+                if (sign > 0 && this.j > j) {
+                    this.j = j;
+                    clearInterval(idJ);
+                } else if (sign < 0 && this.j < j) {
+                    this.j = j;
+                    clearInterval(idJ);
+                }
+            }, delay);
+        }
+
+        globals.tiles[i][j].hasPlayer = true;
     }
 }
