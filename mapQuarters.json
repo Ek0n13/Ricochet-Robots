@@ -5,14 +5,16 @@
       "j": 0,
       "sides": {
         "right": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 0,
       "j": 4,
       "sides": {
         "bottom": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 2,
@@ -20,7 +22,8 @@
       "sides": {
         "top": true,
         "left": true
-      }
+      },
+      "icon": "😎"
     },
     {
       "i": 6,
@@ -28,7 +31,8 @@
       "sides": {
         "bottom": true,
         "left": true
-      }
+      },
+      "icon": "🤔"
     },
     {
       "i": 4,
@@ -36,7 +40,8 @@
       "sides": {
         "top": true,
         "right": true
-      }
+      },
+      "icon": "😂"
     },
     {
       "i": 1,
@@ -44,7 +49,8 @@
       "sides": {
         "right": true,
         "bottom": true
-      }
+      },
+      "icon": "🫡"
     }
   ],
   "quarterB": [
@@ -53,14 +59,16 @@
       "j": 0,
       "sides": {
         "right": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 15,
       "j": 5,
       "sides": {
         "bottom": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 12,
@@ -68,7 +76,8 @@
       "sides": {
         "top": true,
         "left": true
-      }
+      },
+      "icon": "👀"
     },
     {
       "i": 14,
@@ -76,7 +85,8 @@
       "sides": {
         "bottom": true,
         "left": true
-      }
+      },
+      "icon": "😩"
     },
     {
       "i": 9,
@@ -84,7 +94,8 @@
       "sides": {
         "bottom": true,
         "left": true
-      }
+      },
+      "icon": "😏"
     },
     {
       "i": 10,
@@ -92,7 +103,8 @@
       "sides": {
         "right": true,
         "bottom": true
-      }
+      },
+      "icon": "😮"
     },
     {
       "i": 12,
@@ -100,7 +112,8 @@
       "sides": {
         "top": true,
         "right": true
-      }
+      },
+      "icon": "😴"
     }
   ],
   "quarterC": [
@@ -109,14 +122,16 @@
       "j": 9,
       "sides": {
         "bottom": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 14,
       "j": 15,
       "sides": {
         "left": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 12,
@@ -124,7 +139,8 @@
       "sides": {
         "top": true,
         "right": true
-      }
+      },
+      "icon": "🤯"
     },
     {
       "i": 9,
@@ -132,7 +148,8 @@
       "sides": {
         "top": true,
         "left": true
-      }
+      },
+      "icon": "🤷‍♂️"
     },
     {
       "i": 14,
@@ -140,7 +157,8 @@
       "sides": {
         "bottom": true,
         "left": true
-      }
+      },
+      "icon": "🔫"
     },
     {
       "i": 11,
@@ -148,7 +166,8 @@
       "sides": {
         "right": true,
         "bottom": true
-      }
+      },
+      "icon": "😱"
     }
   ],
   "quarterD": [
@@ -157,14 +176,16 @@
       "j": 15,
       "sides": {
         "right": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 0,
       "j": 11,
       "sides": {
         "bottom": true
-      }
+      },
+      "icon": null
     },
     {
       "i": 5,
@@ -172,7 +193,8 @@
       "sides": {
         "bottom": true,
         "left": true
-      }
+      },
+      "icon": "🥵"
     },
     {
       "i": 2,
@@ -180,7 +202,8 @@
       "sides": {
         "top": true,
         "left": true
-      }
+      },
+      "icon": "🤪"
     },
     {
       "i": 4,
@@ -188,7 +211,8 @@
       "sides": {
         "top": true,
         "right": true
-      }
+      },
+      "icon": "🤬"
     },
     {
       "i": 1,
@@ -196,7 +220,8 @@
       "sides": {
         "right": true,
         "bottom": true
-      }
+      },
+      "icon": "🤮"
     }
   ]
 }]

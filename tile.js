@@ -13,25 +13,20 @@ class Tile {
      * 
      * @param {number} i 
      * @param {number} j 
-     * @param {number} size 
-     * @param {{
-     *  R:number,
-     *  G:number,
-     *  B:number,
-     *  A:number
-     * }} clr 
+     * @param {number} size
      */
     constructor(i, j, size) {
         this.i = i;
         this.j = j;
         this.size = size;
+        this.icon = "";
+
         this.clr = {
             R: 255,
             G: 255,
             B: 255,
             A: 255
         };
-
         this.sides[Direction.Top] = false;
         this.sides[Direction.Right] = false;
         this.sides[Direction.Bottom] = false;

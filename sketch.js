@@ -13,6 +13,7 @@
 * margin: number,
 * players: Array<Player>,
 * availableTiles: Array<Tile>,
+* goalTiles: Array<Tile>,
 * map: {{}}
 * }}
 */
@@ -27,6 +28,7 @@ const globals = {
     margin: 0.2,
     players: [],
     availableTiles: [],
+    goalTiles: [],
     map: {},
 };
 
@@ -96,6 +98,7 @@ function draw() {
     drawTilesSingle(globals.availableTiles, availableTileClr);
     drawTilesSingle(globals.players);
     drawTilesBorders(globals.tiles);
+    drawGoalTiles();   
 }
 
 /**
@@ -141,6 +144,7 @@ function mouseClicked(event) {
             globals.availableTiles = [];
         }
     }
+    // checkGoal();
 }
 
 function windowResized() {
@@ -183,12 +187,29 @@ function drawTilesDouble(array, clr) {
     array.forEach((innerArray) => drawTilesSingle(innerArray, clr))
 }
 
+/**
+* @param {Array<Array<Tile>> | Array<Tile>} array 
+*/
 function drawTilesBorders(array) {
     if (array[0] instanceof Array) {
         array.forEach((innerArray) => drawTilesBorders(innerArray));
     } else {
         array.forEach(tile => tile.drawBorders());
     }
+}
+
+function drawGoalTiles() {
+    if (globals.goalTiles.length === 0) return;
+
+    globals.goalTiles.forEach(tile => {
+        let halfSize = tile.size / 2
+        let x = tile.x + halfSize;
+        let y = tile.y + halfSize;
+        
+        textSize(tile.size * 0.7);
+        textAlign(CENTER, CENTER);
+        text(tile.icon, x, y);
+    })
 }
 
 /**
@@ -240,9 +261,15 @@ function loadWalls() {
     Object.keys(globals.map).forEach(quarter =>{
         globals.map[quarter].forEach(object => {
             let tile = globals.tiles[object.i][object.j];
-            Object.keys(object.sides).forEach(key => {
+
+            let sides = Object.keys(object.sides);
+            sides.forEach(key => {
                 tile.sides[key] = object.sides[key];
             });
+            if(sides.length === 2) {
+                tile.icon = object.icon;
+                globals.goalTiles.push(tile)
+            };
         });
     });
 }
@@ -275,9 +302,6 @@ function loadPlayers() {
     });
 }
 
-/**
-* @returns {number}
-*/
 function calculateTileSize() {
     let smallSide = Math.min(windowWidth, windowHeight);
     let length = globals.tiles.length;
@@ -298,6 +322,7 @@ function calculateTileSize() {
     }
 
     globals.players.forEach(player => player.size = globals.size);
+    globals.goalTiles.forEach(tile => tile.size = globals.size);
 }
 
 /**
@@ -381,4 +406,13 @@ function resetPlayers() {
 
         globals.tiles[player.i][player.j].hasPlayer = true;
     });   
+}
+
+function checkGoal() {
+    globals.goalTiles.forEach(tile => {
+        if (tile.hasPlayer) {
+            alert("Game over!");
+            resetPlayers();
+        }
+    })
 }
