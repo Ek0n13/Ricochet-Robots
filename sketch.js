@@ -4,6 +4,7 @@
 * @type {{
 * boardSize: number,
 * tiles: Array<Array<Tile>>,
+* centerTiles: Array<Tile>,
 * size: number,
 * offsetWidth: number,
 * offsetHeight: number,
@@ -16,6 +17,7 @@
 const globals = {
     boardSize: 16,
     tiles: [],
+    centerTiles: [],
     size: 0,
     offsetWidth: 0,
     offsetHeight: 0,
@@ -84,11 +86,10 @@ function setup() {
 }
 
 function draw() {
-    
     // put drawing code here
     background(200);
 
-    drawTilesDouble(globals.tiles);
+    drawTilesDouble(globals.tiles, tileClr);
     drawTilesSingle(globals.availableTiles, availableTileClr);
     drawTilesSingle(globals.players);
     drawTilesBorders(globals.tiles);
@@ -114,15 +115,8 @@ function mouseClicked(event) {
             }
         }
 
-        let selectedPlayer = null;
-        for (let i = 0; i < globals.players.length; i++) {
-            let player = globals.players[i];
-            if (player.i === clickedTile.i && player.j === clickedTile.j) {
-                selectedPlayer = player;
-            } else {
-                player.isSelected = false;
-            }
-        }
+        setSelectedPlayer(clickedTile);
+        let selectedPlayer = getSelectedPlayer();
 
         if (selectedPlayer) {
             selectedPlayer.isSelected = true;
@@ -146,8 +140,19 @@ function windowResized() {
 * @param {Array<Tile>} array 
 */
 function drawTilesSingle(array, clr) {
+    let selectedPlayer = getSelectedPlayer();
+    if (selectedPlayer) {
+        availableTileClr.R = selectedPlayer.clr.R;
+        availableTileClr.G = selectedPlayer.clr.G;
+        availableTileClr.B = selectedPlayer.clr.B;
+    }
+
     array.forEach((tile) => {
-        clr ? tile.clr = clr : null; //this line causes bugs
+        if (globals.availableTiles.includes(tile) ||
+            !globals.centerTiles.includes(tile)) {
+            clr ? tile.clr = clr : null;
+        }
+
         tile.draw();
         
         // fill(255, 0 , 0)
@@ -181,42 +186,41 @@ function loadMap() {
         globals.tiles.push([]);
         for (let j = 0; j < rows; j++) {
             let tile = new Tile(i, j, 1);
-            if (i === 0) {
-                tile.sides.left = true;
-            }
-            if (i === cols - 1) {
-                tile.sides.right = true;
-            }
-            if (j === 0) {
-                tile.sides.top = true;
-            }
-            if (j === rows - 1) {
-                tile.sides.bottom = true;
-            }
+            if (i === 0) tile.sides.left = true;
+            if (j === 0) tile.sides.top = true;
+            if (i === cols - 1) tile.sides.right = true;
+            if (j === rows - 1) tile.sides.bottom = true;
+            
             globals.tiles[i].push(tile);
         }
     }
 
-    let centerA = globals.tiles[7][7];
-    let centerB = globals.tiles[8][7];
-    let centerC = globals.tiles[8][8];
-    let centerD = globals.tiles[7][8];
+    let center = {
+        TL: globals.tiles[7][7],
+        TR: globals.tiles[8][7],
+        BR: globals.tiles[8][8],
+        BL: globals.tiles[7][8],
+    };
 
-    centerA.sides.top = true;
-    centerA.sides.left = true;
-    centerA.clr = clrs.blueClr;
-
-    centerB.sides.top = true;
-    centerB.sides.right = true;
-    centerB.clr = clrs.yellowClr;
-
-    centerC.sides.right = true;
-    centerC.sides.bottom = true;
-    centerC.clr = clrs.greenClr;
-
-    centerD.sides.bottom = true;
-    centerD.sides.left = true;
-    centerD.clr = clrs.redClr;
+    center.TL.sides.top = true;
+    center.TL.sides.left = true;
+    center.TL.clr = clrs.blueClr;
+    globals.centerTiles.push(center.TL);
+    
+    center.TR.sides.top = true;
+    center.TR.sides.right = true;
+    center.TR.clr = clrs.yellowClr;
+    globals.centerTiles.push(center.TR);
+    
+    center.BR.sides.right = true;
+    center.BR.sides.bottom = true;
+    center.BR.clr = clrs.greenClr;
+    globals.centerTiles.push(center.BR);
+    
+    center.BL.sides.bottom = true;
+    center.BL.sides.left = true;
+    center.BL.clr = clrs.redClr;
+    globals.centerTiles.push(center.BL);
 }
 
 function loadWalls() {
@@ -283,4 +287,33 @@ function getCurrentTile() {
         hoverTile = row[l];
     }
     return hoverTile;
+}
+
+/**
+* @returns {Tile | null}
+*/
+function getSelectedPlayer() {
+    return globals.players.find(player => player.isSelected)
+}
+
+/**
+* @param {Tile} clickedTile
+*/
+function setSelectedPlayer(clickedTile) {
+    globals.players.forEach(player => {
+        if (player.i === clickedTile.i && player.j === clickedTile.j) {
+            player.isSelected = !player.isSelected;
+        } else {
+            player.isSelected = false;
+        }
+    });
+
+    // for (let i = 0; i < globals.players.length; i++) {
+    //     let player = globals.players[i];
+    //     if (player.i === clickedTile.i && player.j === clickedTile.j) {
+    //         player.isSelected = true;
+    //     } else {
+    //         player.isSelected = false;
+    //     }
+    // }
 }

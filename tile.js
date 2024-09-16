@@ -96,22 +96,22 @@ class Tile {
     }
 
     #customLine(point1, point2) {
-        strokeWeight(3);
+        strokeWeight(5);
         line(point1.x, point1.y, point2.x, point2.y);
     }
 
 
-    isInside(mouseX, mouseY) {
-        let minX = this.x;
-        let minY = this.y;
-        let maxX = this.x + this.size;
-        let maxY = this.y + this.size;
+    // isInside(mouseX, mouseY) {
+    //     let minX = this.x;
+    //     let minY = this.y;
+    //     let maxX = this.x + this.size;
+    //     let maxY = this.y + this.size;
 
-        let minCondition = mouseX > minX && mouseY > minY;
-        let maxCondition = mouseX < maxX && mouseY < maxY;
+    //     let minCondition = mouseX > minX && mouseY > minY;
+    //     let maxCondition = mouseX < maxX && mouseY < maxY;
 
-        return minCondition && maxCondition;
-    }
+    //     return minCondition && maxCondition;
+    // }
 
     canExit(moveDirection) {
         if (moveDirection === Direction.Top) {
