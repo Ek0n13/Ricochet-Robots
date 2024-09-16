@@ -5,7 +5,7 @@ class Player extends Tile {
       super(i, j, globals.size);
 
       this.clr = clr;
-      
+
       this.width = globals.size * this.#scaleSize;
       this.isSelected = false;
   }
@@ -13,7 +13,7 @@ class Player extends Tile {
   draw() {
       this.width = globals.size * this.#scaleSize;
       fill(this.clr.R, this.clr.G, this.clr.B, this.clr.A);
-      strokeWeight(1)
+      strokeWeight(2)
       ellipse(this.x + this.size / 2, this.y + this.size / 2, this.width);
   }
 
