@@ -1,13 +1,16 @@
+// import { mapQuarters } from "./mapQuarters.json" assert { type: "json" };
+
 /**
- * @type {{
-*  boardSize: number,
-*  tiles: Array<Array<Tile>>,
-*  size: number,
-*  offsetWidth: number,
-*  offsetHeight: number,
-*  margin: number,
-*  players: Array<Player>,
-*  availableTiles:Array<Tile>
+* @type {{
+* boardSize: number,
+* tiles: Array<Array<Tile>>,
+* size: number,
+* offsetWidth: number,
+* offsetHeight: number,
+* margin: number,
+* players: Array<Player>,
+* availableTiles:Array<Tile>,
+* map: Object
 * }}
 */
 const globals = {
@@ -19,29 +22,63 @@ const globals = {
     margin: 0.2,
     players: [],
     availableTiles: [],
-}
+    map: {},
+};
 
 const tileClr = {
     R: 255,
     G: 255,
     B: 255,
     A: 255
-}
+};
 
-let availableTileClr = {
-    R: 100,
-    G: 150,
-    B: 200,
-    A: 255
-}
+const availableTileClr = {
+    R: 0,
+    G: 0,
+    B: 0,
+    A: 80
+};
 
+const clrs = {
+    redClr: {
+        R: 255,
+        G: 0,
+        B: 0,
+        A: 255
+    },
+    greenClr: {
+        R: 0,
+        G: 255,
+        B: 0,
+        A: 255
+    },
+    blueClr: {
+        R: 0,
+        G: 0,
+        B: 255,
+        A: 255
+    },
+    yellowClr: {
+        R: 255,
+        G: 255,
+        B: 0,
+        A: 255
+    },
+};
+
+function preload() {
+    globals.map = loadJSON("./mapQuarters.json");
+}
 
 function setup() {
-    // frameRate(1);
     // put setup code here
-    createCanvas(windowWidth, window.innerHeight);
+    // frameRate(1);
 
+    createCanvas(windowWidth, window.innerHeight);
+    
+    globals.map = globals.map[0]
     loadMap();
+    loadWalls();
     loadPlayers();
     calculateTileSize();
 }
@@ -51,37 +88,11 @@ function draw() {
     // put drawing code here
     background(200);
 
-    drawTiles(globals.tiles, tileClr);
-
-    drawTiles(globals.availableTiles, availableTileClr);
-
-    drawTiles(globals.players);
-
-    drawTilesBorders(globals.tiles);    
+    drawTilesDouble(globals.tiles);
+    drawTilesSingle(globals.availableTiles, availableTileClr);
+    drawTilesSingle(globals.players);
+    drawTilesBorders(globals.tiles);
 }
-
-/**
-* @param {Array<Array<Tile>> | Array<Tile>} array 
-*/
-function drawTiles(array, clr) {
-    if (array[0] instanceof Array) {
-        array.forEach((innerArray) => drawTiles(innerArray, clr))
-    } else {
-        array.forEach(tile => {
-            clr ? tile.clr = clr : null;
-            tile.draw();
-        });
-    }
-}
-
-function drawTilesBorders(array) {
-    if (array[0] instanceof Array) {
-        array.forEach((innerArray) => drawTilesBorders(innerArray));
-    } else {
-        array.forEach(tile => tile.drawBorders());
-    }
-}
-
 
 // /**
 // * @param {KeyboardEvent} event 
@@ -112,12 +123,12 @@ function mouseClicked(event) {
                 player.isSelected = false;
             }
         }
+
         if (selectedPlayer) {
             selectedPlayer.isSelected = true;
             availableTileClr.R = selectedPlayer.clr.R;
             availableTileClr.G = selectedPlayer.clr.G;
             availableTileClr.B = selectedPlayer.clr.B;
-            availableTileClr.A = 100;
 
             globals.availableTiles = selectedPlayer.getAvailableTiles(globals.tiles);
         } else {
@@ -129,6 +140,34 @@ function mouseClicked(event) {
 function windowResized() {
     resizeCanvas(windowWidth, window.innerHeight);
     calculateTileSize();
+}
+
+/**
+* @param {Array<Tile>} array 
+*/
+function drawTilesSingle(array, clr) {
+    array.forEach((tile) => {
+        clr ? tile.clr = clr : null; //this line causes bugs
+        tile.draw();
+        
+        // fill(255, 0 , 0)
+        // text(`${tile.i} ${tile.j}`, tile.x, tile.y+15)
+    });
+}
+
+/**
+* @param {Array<Array<Tile>>} array 
+*/
+function drawTilesDouble(array, clr) {
+    array.forEach((innerArray) => drawTilesSingle(innerArray, clr))
+}
+
+function drawTilesBorders(array) {
+    if (array[0] instanceof Array) {
+        array.forEach((innerArray) => drawTilesBorders(innerArray));
+    } else {
+        array.forEach(tile => tile.drawBorders());
+    }
 }
 
 /**
@@ -158,55 +197,46 @@ function loadMap() {
         }
     }
 
-    globals.tiles[7][7].sides.top = true;
-    globals.tiles[7][7].sides.left = true;
+    let centerA = globals.tiles[7][7];
+    let centerB = globals.tiles[8][7];
+    let centerC = globals.tiles[8][8];
+    let centerD = globals.tiles[7][8];
 
-    globals.tiles[7][8].sides.bottom = true;
-    globals.tiles[7][8].sides.left = true;
+    centerA.sides.top = true;
+    centerA.sides.left = true;
+    centerA.clr = clrs.blueClr;
 
-    globals.tiles[8][7].sides.top = true;
-    globals.tiles[8][7].sides.right = true;
+    centerB.sides.top = true;
+    centerB.sides.right = true;
+    centerB.clr = clrs.yellowClr;
 
-    globals.tiles[8][8].sides.bottom = true;
-    globals.tiles[8][8].sides.right = true;
+    centerC.sides.right = true;
+    centerC.sides.bottom = true;
+    centerC.clr = clrs.greenClr;
 
-    // custom tiles
-    globals.tiles[9][6].sides.right = true;
-    globals.tiles[10][5].sides.left = true;
+    centerD.sides.bottom = true;
+    centerD.sides.left = true;
+    centerD.clr = clrs.redClr;
+}
+
+function loadWalls() {
+    Object.keys(globals.map).forEach(quarter =>{
+        globals.map[quarter].forEach(object => {
+            let tile = globals.tiles[object.i][object.j];
+            Object.keys(object.sides).forEach(key => {
+                tile.sides[key] = object.sides[key];
+            });
+        });
+    });
 }
 
 function loadPlayers() {
     globals.players = [
-        new Player(0, 0, globals.size), // Red
-        new Player(4, 6, globals.size), // Green
-        new Player(4, 10, globals.size), // Blue
-        new Player(5, 5, globals.size) // Yellow
+        new Player( 3,  2, clrs.blueClr),
+        new Player(12,  4, clrs.yellowClr),
+        new Player(11, 11, clrs.greenClr),
+        new Player( 2, 12, clrs.redClr),
     ];
-
-    globals.players[0].clr = {
-        R: 255,
-        G: 0,
-        B: 0,
-        A: 255
-    };
-    globals.players[1].clr = {
-        R: 0,
-        G: 255,
-        B: 0,
-        A: 255
-    };
-    globals.players[2].clr = {
-        R: 0,
-        G: 0,
-        B: 255,
-        A: 255
-    };
-    globals.players[3].clr = {
-        R: 255,
-        G: 255,
-        B: 0,
-        A: 255
-    };
 
     globals.players.forEach(player => {
         globals.tiles[player.i][player.j].hasPlayer = true;
