@@ -14,6 +14,7 @@
 * players: Array<Player>,
 * availableTiles: Array<Tile>,
 * goalTiles: Array<Tile>,
+* moves: Array<String>,
 * map: {{}}
 * }}
 */
@@ -29,6 +30,8 @@ const globals = {
     players: [],
     availableTiles: [],
     goalTiles: [],
+    moves: [],
+    // movesCount: 0,
     map: {},
 };
 
@@ -100,7 +103,9 @@ function draw() {
     drawTilesSingle(globals.players);
     
     drawTilesBorders(globals.tiles);
-    drawGoalTiles(); 
+    drawGoalTiles();
+
+    drawText();
 }
 
 /**
@@ -219,6 +224,27 @@ function drawGoalTiles() {
     });
 }
 
+function drawText() {
+    let firstTile = globals.tiles[0][0];
+    let offset = globals.size * 2.25
+    let textX = firstTile.x - offset;
+    let textY = firstTile.y;
+
+    let menuText = `Moves:\n${globals.moves.length}`;
+    
+    for (let i = 0; i < globals.moves.length; i++) {
+        if (i % 2 === 0) {
+            menuText += "\n"
+        }
+        menuText += `${globals.moves[i]}`;
+    }
+
+    fill(0);
+    textSize(firstTile.size * 0.5);
+    textAlign(LEFT, TOP);
+    text(menuText, textX, textY);
+}
+
 /**
 * @returns {Array<Array<Tile>>}
 */
@@ -315,9 +341,9 @@ function calculateTileSize() {
     let smallSide = Math.min(windowWidth, windowHeight);
     let length = globals.tiles.length;
     
-    globals.size = smallSide / (length + globals.margin);
+    globals.size = smallSide / (length + globals.margin + 3);
 
-    globals.offsetWidth = (windowWidth / 2) - ((length * globals.size) / 2);
+    globals.offsetWidth = 20 + (windowWidth / 2) - ((length * globals.size) / 2);
     globals.offsetHeight = (windowHeight / 2) - ((length * globals.size) / 2);
 
     for (let i = 0; i < globals.tiles.length; i++) {
@@ -414,7 +440,9 @@ function resetPlayers() {
         player.j = initTile.j;
 
         globals.tiles[player.i][player.j].hasPlayer = true;
-    });   
+    });
+
+    globals.moves = [];
 }
 
 /**

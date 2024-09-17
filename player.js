@@ -102,28 +102,34 @@ class Player extends Tile {
      * @param {Tile} tile 
      */
     move(tile) {
+        let move = this.playerColorAsLetter();
+
         let targetI = this.i;
         let targetJ = this.j;
 
         if (this.i === tile.i) {
             if (this.j < tile.j) {
                 targetJ = Math.max(...globals.availableTiles.map(x => x.j));
+                globals.moves.push(`${move}⬇️`);
             } else if (this.j > tile.j) {
                 targetJ = Math.min(...globals.availableTiles.map(x => x.j));
+                globals.moves.push(`${move}⬆️`);
             }
         } else if (this.j === tile.j) {
             if (this.i < tile.i) {
                 targetI = Math.max(...globals.availableTiles.map(x => x.i));
+                globals.moves.push(`${move}➡️`);
             } else if (this.i > tile.i) {
                 targetI = Math.min(...globals.availableTiles.map(x => x.i));
+                globals.moves.push(`${move}⬅️`);
             }
         }
 
         this.moveSpecific(targetI, targetJ).then((value) => {
-        if (this.playerReachedGoal()) {
-            alert("Goal!!!");
-            resetPlayers();
-        }
+            if (this.playerReachedGoal()) {
+                alert("Goal!!!");
+                resetPlayers();
+            }
         });
     }
 
@@ -138,11 +144,11 @@ class Player extends Tile {
                 let idI = setInterval(() => {
                     let sign = Math.sign(i - this.i);
                     this.i += ease * sign;
-                    if (sign > 0 && this.i > i) {
+                    if (sign > 0 && this.i >= i) {
                         this.i = i;
                         clearInterval(idI);
                         resolve(0);
-                    } else if (sign < 0 && this.i < i) {
+                    } else if (sign < 0 && this.i <= i) {
                         this.i = i;
                         clearInterval(idI);
                         resolve(0);
@@ -154,11 +160,11 @@ class Player extends Tile {
                 let idJ = setInterval(() => {
                     let sign = Math.sign(j - this.j);
                     this.j += ease * sign;
-                    if (sign > 0 && this.j > j) {
+                    if (sign > 0 && this.j >= j) {
                         this.j = j;
                         clearInterval(idJ);
                         resolve(0);
-                    } else if (sign < 0 && this.j < j) {
+                    } else if (sign < 0 && this.j <= j) {
                         this.j = j;
                         clearInterval(idJ);
                         resolve(0);
@@ -183,9 +189,25 @@ class Player extends Tile {
                 )
             );
         });
+        let minimumMoves = globals.moves.length > 1;
         
-        if (goalTile) return true;
+        if (minimumMoves && goalTile) return true;
         
         return false;
+    }
+
+    /**
+     * @returns {String}
+     */
+    playerColorAsLetter() {
+        if (compareColorsRGB(this.clr, clrs.redClr)) {
+            return "R";
+        } else if (compareColorsRGB(this.clr, clrs.greenClr)) {
+            return "G";
+        } else if (compareColorsRGB(this.clr, clrs.blueClr)) {
+            return "B";
+        } else if (compareColorsRGB(this.clr, clrs.yellowClr)) {
+            return "Y";
+        }
     }
 }
