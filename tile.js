@@ -20,6 +20,7 @@ class Tile {
         this.j = j;
         this.size = size;
         this.icon = "";
+        this.clrsKey = "";
 
         this.clr = {
             R: 255,

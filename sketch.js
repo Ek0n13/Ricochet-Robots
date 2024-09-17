@@ -96,9 +96,11 @@ function draw() {
 
     drawTilesDouble(globals.tiles, tileClr);
     drawTilesSingle(globals.availableTiles, availableTileClr);
+    
     drawTilesSingle(globals.players);
+    
     drawTilesBorders(globals.tiles);
-    drawGoalTiles();   
+    drawGoalTiles(); 
 }
 
 /**
@@ -144,11 +146,10 @@ function mouseClicked(event) {
             globals.availableTiles = [];
         }
     }
-    // checkGoal();
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth, window.innerHeight);
+    resizeCanvas(windowWidth, windowHeight);
     calculateTileSize();
 }
 
@@ -167,6 +168,7 @@ function drawTilesSingle(array, clr) {
         let tileChecker = !(
             Object.values(globals.centerTiles).includes(tile)
             || globals.initPlayerTiles.includes(tile)
+            || globals.goalTiles.includes(tile)
         );
         
         if (tileChecker) {
@@ -200,7 +202,7 @@ function drawTilesBorders(array) {
 
 function drawGoalTiles() {
     if (globals.goalTiles.length === 0) return;
-
+    
     globals.goalTiles.forEach(tile => {
         let halfSize = tile.size / 2
         let x = tile.x + halfSize;
@@ -209,7 +211,10 @@ function drawGoalTiles() {
         textSize(tile.size * 0.7);
         textAlign(CENTER, CENTER);
         text(tile.icon, x, y);
-    })
+
+        if (tile.clrsKey)
+            assignColorsAtoB(tile.clr, clrs[tile.clrsKey]);
+    });
 }
 
 /**
@@ -268,6 +273,7 @@ function loadWalls() {
             });
             if(sides.length === 2) {
                 tile.icon = object.icon;
+                tile.clrsKey = object.clrsKey;
                 globals.goalTiles.push(tile)
             };
         });
@@ -300,6 +306,7 @@ function loadPlayers() {
         tile.hasPlayer = true;
         globals.initPlayerTiles.push(tile);
     });
+    
 }
 
 function calculateTileSize() {
@@ -408,11 +415,29 @@ function resetPlayers() {
     });   
 }
 
-function checkGoal() {
-    globals.goalTiles.forEach(tile => {
-        if (tile.hasPlayer) {
-            alert("Game over!");
-            resetPlayers();
-        }
-    })
+/**
+ * 
+ * @param {{R, G, B, A}} colorA 
+ * @param {{R, G, B, A}} colorB 
+ */
+function assignColorsAtoB(colorA, colorB) {
+    colorA.R = colorB.R;
+    colorA.G = colorB.G;
+    colorA.B = colorB.B;
+    colorA.A = colorB.A;
+}
+
+/**
+ * 
+ * @param {{R, G, B, A}} colorA 
+ * @param {{R, G, B, A}} colorB 
+ * @returns {Boolean}
+ */
+function compareColors(colorA, colorB) {
+    return (
+        colorA.R === colorB.R &&
+        colorA.G === colorB.G &&
+        colorA.B === colorB.B &&
+        colorA.A === colorB.A
+    );
 }
