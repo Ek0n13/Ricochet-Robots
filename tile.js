@@ -92,7 +92,9 @@ class Tile {
     }
 
     #customLine(point1, point2) {
-        strokeWeight(5);
+        let weight = Math.ceil(this.size / 10);
+        
+        strokeWeight(weight);
         line(point1.x, point1.y, point2.x, point2.y);
     }
 
