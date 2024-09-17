@@ -14,10 +14,18 @@ class Player extends Tile {
     }
 
     draw() {
+        let halfSize = this.size / 2;
+        let x = this.x + halfSize;
+        let y = this.y + halfSize;
+        
         this.width = globals.size * this.#scaleSize;
         fill(this.clr.R, this.clr.G, this.clr.B, this.clr.A);
         strokeWeight(2)
-        ellipse(this.x + this.size / 2, this.y + this.size / 2, this.width);
+        ellipse(x, y, this.width);
+
+        textSize(this.size * 0.45);
+        textAlign(CENTER, CENTER);
+        text("🚀", x, y);
     }
 
     /**
@@ -170,7 +178,7 @@ class Player extends Tile {
             return (
                 tile.i === this.i &&
                 tile.j === this.j && (
-                    compareColors(tile.clr, this.clr) ||
+                    compareColorsRGB(tile.clr, this.clr) ||
                     tile.clrsKey === null
                 )
             );

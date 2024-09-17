@@ -212,8 +212,10 @@ function drawGoalTiles() {
         textAlign(CENTER, CENTER);
         text(tile.icon, x, y);
 
-        if (tile.clrsKey)
+        if (tile.clrsKey) {
             assignColorsAtoB(tile.clr, clrs[tile.clrsKey]);
+            tile.clr.A = 150;
+        }
     });
 }
 
@@ -433,11 +435,10 @@ function assignColorsAtoB(colorA, colorB) {
  * @param {{R, G, B, A}} colorB 
  * @returns {Boolean}
  */
-function compareColors(colorA, colorB) {
+function compareColorsRGB(colorA, colorB) {
     return (
         colorA.R === colorB.R &&
         colorA.G === colorB.G &&
-        colorA.B === colorB.B &&
-        colorA.A === colorB.A
+        colorA.B === colorB.B
     );
 }
