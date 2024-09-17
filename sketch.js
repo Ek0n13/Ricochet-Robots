@@ -15,6 +15,8 @@
 * availableTiles: Array<Tile>,
 * goalTiles: Array<Tile>,
 * moves: Array<String>,
+* currentGoalTile: Tile,
+* previousGoalTile: Tile,
 * map: {{}}
 * }}
 */
@@ -31,7 +33,8 @@ const globals = {
     availableTiles: [],
     goalTiles: [],
     moves: [],
-    // movesCount: 0,
+    currentGoalTile: null,
+    previousGoalTile: null,
     map: {},
 };
 
@@ -91,6 +94,7 @@ function setup() {
     loadWalls();
     loadPlayers();
     calculateTileSize();
+    setGoalTile();
 }
 
 function draw() {
@@ -117,6 +121,10 @@ function keyPressed(event) {
             case "F5":
                 event.preventDefault();
                 resetPlayers();
+                break;
+            case "F6":
+                event.preventDefault();
+                setGoalTile();
                 break;
             default:
                 break;
@@ -209,13 +217,14 @@ function drawGoalTiles() {
     if (globals.goalTiles.length === 0) return;
     
     globals.goalTiles.forEach(tile => {
-        let halfSize = tile.size / 2
-        let x = tile.x + halfSize;
-        let y = tile.y + halfSize;
+        // let halfSize = tile.size / 2
+        // let x = tile.x + halfSize;
+        // let y = tile.y + halfSize;
         
-        textSize(tile.size * 0.7);
-        textAlign(CENTER, CENTER);
-        text(tile.icon, x, y);
+        // textSize(tile.size * 0.7);
+        // textAlign(CENTER, CENTER);
+        // text(tile.icon, x, y);
+        tile.drawIcon();
 
         if (tile.clrsKey) {
             assignColorsAtoB(tile.clr, clrs[tile.clrsKey]);
@@ -226,12 +235,20 @@ function drawGoalTiles() {
 
 function drawText() {
     let firstTile = globals.tiles[0][0];
-    let offset = globals.size * 2.25
-    let textX = firstTile.x - offset;
-    let textY = firstTile.y;
+    let tileOffset = globals.size;
+    let txtOffset = globals.size * 2.25;
 
-    let menuText = `Moves:\n${globals.moves.length}`;
+    let tileX = firstTile.x - tileOffset;
+    let tileY = firstTile.y;
+    let tileSize = firstTile.size * 0.75;
     
+    let textX = firstTile.x - txtOffset;
+    let textY = firstTile.y;
+    let txtSize = firstTile.size * 0.5;
+    
+
+    let menuText = "";
+    menuText += `\n\nMoves:\n${globals.moves.length}`;
     for (let i = 0; i < globals.moves.length; i++) {
         if (i % 2 === 0) {
             menuText += "\n"
@@ -239,9 +256,13 @@ function drawText() {
         menuText += `${globals.moves[i]}`;
     }
 
+    globals.currentGoalTile.drawCustom(tileX, tileY, tileSize);
+    globals.currentGoalTile.drawIconCustom(tileX, tileY, tileSize);
+    
     fill(0);
-    textSize(firstTile.size * 0.5);
+    textSize(txtSize);
     textAlign(LEFT, TOP);
+    text("Goal:", textX, tileY);
     text(menuText, textX, textY);
 }
 
@@ -469,4 +490,27 @@ function compareColorsRGB(colorA, colorB) {
         colorA.G === colorB.G &&
         colorA.B === colorB.B
     );
+}
+
+/**
+ * 
+ * @param {Tile} tileA 
+ * @param {Tile} tileB 
+ * @returns {Boolean}
+ */
+function compareGoalTiles(tileA, tileB) {
+    return (
+        compareColorsRGB(tileA.clr, tileB.clr) &&
+        tileA.icon === tileB.icon
+    );
+}
+
+function setGoalTile() {
+    globals.currentGoalTile = globals.goalTiles[Math.floor(Math.random() * globals.goalTiles.length)];
+    if (globals.previousGoalTile) {
+        if (compareGoalTiles(globals.currentGoalTile, globals.previousGoalTile)) {
+            setGoalTile();
+        }
+    }
+    globals.previousGoalTile = globals.currentGoalTile;
 }

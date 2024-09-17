@@ -76,6 +76,12 @@ class Tile {
         rect(this.x, this.y, this.size, this.size);
     }
 
+    drawCustom(x, y, size) {
+        strokeWeight(0.2);
+        fill(this.clr.R, this.clr.G, this.clr.B, this.clr.A);
+        rect(x, y, size, size);
+    }
+
     drawBorders() {
         if (this.sides.top) {
             this.#customLine(this.topLeft, this.topRight);
@@ -93,11 +99,31 @@ class Tile {
 
     #customLine(point1, point2) {
         let weight = Math.ceil(this.size / 10);
-        
+
         strokeWeight(weight);
         line(point1.x, point1.y, point2.x, point2.y);
     }
 
+    drawIcon() {
+        let halfSize = this.size / 2
+        let x = this.x + halfSize;
+        let y = this.y + halfSize;
+        
+        textSize(this.size * 0.7);
+        textAlign(CENTER, CENTER);
+        text(this.icon, x, y);
+    }
+
+    drawIconCustom(x, y, size) {
+        let halfSize = size / 2
+        let customX = x + halfSize;
+        let customY = y + halfSize;
+        
+        fill(0);
+        textSize(size * 0.7);
+        textAlign(CENTER, CENTER);
+        text(this.icon, customX, customY);
+    }
 
     // isInside(mouseX, mouseY) {
     //     let minX = this.x;

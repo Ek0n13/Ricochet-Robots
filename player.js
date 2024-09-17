@@ -125,16 +125,18 @@ class Player extends Tile {
             }
         }
 
-        this.moveSpecific(targetI, targetJ).then((value) => {
-            if (this.playerReachedGoal()) {
-                alert("Goal!!!");
-                resetPlayers();
-            }
-        });
+        this.moveSpecific(targetI, targetJ)
+            .then((value) => {
+                if (this.playerReachedGoal()) {
+                    alert("Goal!!!");
+                    resetPlayers();
+                    setGoalTile();
+                }
+            });
     }
 
     moveSpecific(i, j) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {    
             let ease = 0.2;
             let delay = 10;
 
@@ -147,11 +149,11 @@ class Player extends Tile {
                     if (sign > 0 && this.i >= i) {
                         this.i = i;
                         clearInterval(idI);
-                        resolve(0);
+                        resolve(null);
                     } else if (sign < 0 && this.i <= i) {
                         this.i = i;
                         clearInterval(idI);
-                        resolve(0);
+                        resolve(null);
                     }
                 }, delay);
             }
@@ -163,11 +165,11 @@ class Player extends Tile {
                     if (sign > 0 && this.j >= j) {
                         this.j = j;
                         clearInterval(idJ);
-                        resolve(0);
+                        resolve(null);
                     } else if (sign < 0 && this.j <= j) {
                         this.j = j;
                         clearInterval(idJ);
-                        resolve(0);
+                        resolve(null);
                     }
                 }, delay);
             }
@@ -180,18 +182,16 @@ class Player extends Tile {
      * @returns {Boolean}
      */
     playerReachedGoal() {
-        let goalTile = globals.goalTiles.find(tile => {
-            return (
-                tile.i === this.i &&
-                tile.j === this.j && (
-                    compareColorsRGB(tile.clr, this.clr) ||
-                    tile.clrsKey === null
-                )
+        let currentGoalTile = globals.currentGoalTile;
+        let currentGoal = 
+            currentGoalTile.i === this.i &&
+            currentGoalTile.j === this.j && (
+                compareColorsRGB(currentGoalTile.clr, this.clr) ||
+                currentGoalTile.clrsKey === null
             );
-        });
         let minimumMoves = globals.moves.length > 1;
         
-        if (minimumMoves && goalTile) return true;
+        if (minimumMoves && currentGoal) return true;
         
         return false;
     }
