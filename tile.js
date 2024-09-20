@@ -9,16 +9,16 @@ class Tile {
     /** @type {{top: boolean, right: boolean, bottom: boolean, left: boolean}}} */
     sides = {};
     hasPlayer = false;
+    
     /**
      * 
      * @param {number} i 
      * @param {number} j 
-     * @param {number} size
      */
-    constructor(i, j, size) {
+    constructor(i, j) {
         this.i = i;
         this.j = j;
-        this.size = size;
+        this.size = 1;
         this.icon = "";
         this.clrsKey = "";
 

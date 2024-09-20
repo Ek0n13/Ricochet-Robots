@@ -1,252 +1,526 @@
-[{
-  "quarterA": [
-    {
-      "i": 4,
-      "j": 0,
-      "sides": {
-        "right": true
+[
+  {
+    "clrsKey": "blueClr",
+    
+    "walls": [
+      {
+        "i": 0,
+        "j": 4,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 0,
-      "j": 4,
-      "sides": {
-        "bottom": true
+      {
+        "i": 4,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 2,
-      "j": 1,
-      "sides": {
-        "top": true,
-        "left": true
+      {
+        "i": 1,
+        "j": 6,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "😎",
+        "clrsKey": "redClr"
       },
-      "icon": "😎",
-      "clrsKey": "redClr"
-    },
-    {
-      "i": 6,
-      "j": 3,
-      "sides": {
-        "bottom": true,
-        "left": true
+      {
+        "i": 2,
+        "j": 1,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "🤔",
+        "clrsKey": "greenClr"
       },
-      "icon": "🤔",
-      "clrsKey": "greenClr"
-    },
-    {
-      "i": 4,
-      "j": 5,
-      "sides": {
-        "top": true,
-        "right": true
+      {
+        "i": 4,
+        "j": 5,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "blueClr"
       },
-      "icon": "😂",
-      "clrsKey": "blueClr"
-    },
-    {
-      "i": 1,
-      "j": 6,
-      "sides": {
-        "right": true,
-        "bottom": true
+      {
+        "i": 6,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "yellowClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "yellowClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 5,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "🫡",
-      "clrsKey": "yellowClr"
-    }
-  ],
-  "quarterB": [
-    {
-      "i": 10,
-      "j": 0,
-      "sides": {
-        "right": true
+      {
+        "i": 5,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 15,
-      "j": 5,
-      "sides": {
-        "bottom": true
+      {
+        "i": 1,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😎",
+        "clrsKey": "yellowClr"
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 12,
-      "j": 1,
-      "sides": {
-        "top": true,
-        "left": true
+      {
+        "i": 2,
+        "j": 1,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "🤔",
+        "clrsKey": "redClr"
       },
-      "icon": "😎",
-      "clrsKey": "blueClr"
-    },
-    {
-      "i": 14,
-      "j": 2,
-      "sides": {
-        "bottom": true,
-        "left": true
+      {
+        "i": 3,
+        "j": 7,
+        "sides": {
+          "right": true,
+          "bottom": true
+        },
+        "icon": "🌈",
+        "clrsKey": null
       },
-      "icon": "🤔",
-      "clrsKey": "greenClr"
-    },
-    {
-      "i": 9,
-      "j": 3,
-      "sides": {
-        "bottom": true,
-        "left": true
+      {
+        "i": 5,
+        "j": 6,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "greenClr"
       },
-      "icon": "🌈",
-      "clrsKey": null
-    },
-    {
-      "i": 10,
-      "j": 5,
-      "sides": {
-        "right": true,
-        "bottom": true
+      {
+        "i": 6,
+        "j": 4,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "blueClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "greenClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 6,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "😂",
-      "clrsKey": "yellowClr"
-    },
-    {
-      "i": 12,
-      "j": 6,
-      "sides": {
-        "top": true,
-        "right": true
+      {
+        "i": 1,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "🫡",
-      "clrsKey": "redClr"
-    }
-  ],
-  "quarterC": [
-    {
-      "i": 15,
-      "j": 9,
-      "sides": {
-        "bottom": true
+      {
+        "i": 1,
+        "j": 2,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "😎",
+        "clrsKey": "blueClr"
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 14,
-      "j": 15,
-      "sides": {
-        "left": true
+      {
+        "i": 3,
+        "j": 6,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "🤔",
+        "clrsKey": "yellowClr"
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 12,
-      "j": 9,
-      "sides": {
-        "top": true,
-        "right": true
+      {
+        "i": 4,
+        "j": 1,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "🫡",
+        "clrsKey": "redClr"
       },
-      "icon": "😎",
-      "clrsKey": "greenClr"
-    },
-    {
-      "i": 9,
-      "j": 12,
-      "sides": {
-        "top": true,
-        "left": true
+      {
+        "i": 6,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "😂",
+        "clrsKey": "greenClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "redClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 5,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "🤔",
-      "clrsKey": "yellowClr"
-    },
-    {
-      "i": 14,
-      "j": 13,
-      "sides": {
-        "bottom": true,
-        "left": true
+      {
+        "i": 3,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "😂",
-      "clrsKey": "redClr"
-    },
-    {
-      "i": 11,
-      "j": 14,
-      "sides": {
-        "right": true,
-        "bottom": true
+      {
+        "i": 1,
+        "j": 1,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😎",
+        "clrsKey": "greenClr"
       },
-      "icon": "🫡",
-      "clrsKey": "blueClr"
-    }
-  ],
-  "quarterD": [
-    {
-      "i": 5,
-      "j": 15,
-      "sides": {
-        "right": true
+      {
+        "i": 2,
+        "j": 4,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "🤔",
+        "clrsKey": "blueClr"
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 0,
-      "j": 11,
-      "sides": {
-        "bottom": true
+      {
+        "i": 6,
+        "j": 2,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "yellowClr"
       },
-      "icon": null,
-      "clrsKey": null
-    },
-    {
-      "i": 5,
-      "j": 8,
-      "sides": {
-        "bottom": true,
-        "left": true
+      {
+        "i": 7,
+        "j": 5,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "redClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "blueClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 3,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "😎",
-      "clrsKey": "yellowClr"
-    },
-    {
-      "i": 2,
-      "j": 9,
-      "sides": {
-        "top": true,
-        "left": true
+      {
+        "i": 5,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
       },
-      "icon": "🤔",
-      "clrsKey": "redClr"
-    },
-    {
-      "i": 4,
-      "j": 13,
-      "sides": {
-        "top": true,
-        "right": true
+      {
+        "i": 2,
+        "j": 4,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "😎",
+        "clrsKey": "redClr"
       },
-      "icon": "😂",
-      "clrsKey": "greenClr"
-    },
-    {
-      "i": 1,
-      "j": 14,
-      "sides": {
-        "right": true,
-        "bottom": true
+      {
+        "i": 3,
+        "j": 2,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "🤔",
+        "clrsKey": "greenClr"
       },
-      "icon": "🫡",
-      "clrsKey": "blueClr"
-    }
-  ]
-}]
+      {
+        "i": 4,
+        "j": 5,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "blueClr"
+      },
+      {
+        "i": 5,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "yellowClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "yellowClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 3,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 2,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 1,
+        "j": 6,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "😎",
+        "clrsKey": "yellowClr"
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "🤔",
+        "clrsKey": "redClr"
+      },
+      {
+        "i": 5,
+        "j": 1,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "🫡",
+        "clrsKey": "greenClr"
+      },
+      {
+        "i": 6,
+        "j": 4,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "blueClr"
+      },
+      {
+        "i": 7,
+        "j": 2,
+        "sides": {
+          "right": true,
+          "bottom": true
+        },
+        "icon": "🌈",
+        "clrsKey": null
+      }
+    ]
+  },{
+    "clrsKey": "greenClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 6,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 1,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 1,
+        "j": 4,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😎",
+        "clrsKey": "blueClr"
+      },
+      {
+        "i": 3,
+        "j": 1,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "🤔",
+        "clrsKey": "yellowClr"
+      },
+      {
+        "i": 4,
+        "j": 6,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "redClr"
+      },
+      {
+        "i": 6,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "😂",
+        "clrsKey": "greenClr"
+      }
+    ]
+  },
+  {
+    "clrsKey": "redClr",
+    "walls": [
+      {
+        "i": 0,
+        "j": 5,
+        "sides": {
+          "bottom": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 1,
+        "j": 0,
+        "sides": {
+          "right": true
+        },
+        "icon": null,
+        "clrsKey": null
+      },
+      {
+        "i": 1,
+        "j": 3,
+        "sides": {
+          "bottom": true,
+          "left": true
+        },
+        "icon": "😎",
+        "clrsKey": "greenClr"
+      },
+      {
+        "i": 3,
+        "j": 6,
+        "sides": {
+          "bottom": true,
+          "right": true
+        },
+        "icon": "🤔",
+        "clrsKey": "blueClr"
+      },
+      {
+        "i": 4,
+        "j": 1,
+        "sides": {
+          "top": true,
+          "right": true
+        },
+        "icon": "🫡",
+        "clrsKey": "yellowClr"
+      },
+      {
+        "i": 5,
+        "j": 5,
+        "sides": {
+          "top": true,
+          "left": true
+        },
+        "icon": "😂",
+        "clrsKey": "redClr"
+      }
+    ]
+  }
+]

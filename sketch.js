@@ -2,22 +2,38 @@
 /** @typedef {{A: Array<Tile>, B: Array<Tile>, C: Array<Tile>, D: Array<Tile>}} Quarters */
 
 /**
+ * @typedef {{
+ *  i: number,
+ *  j: number,
+ *  sides: {
+ *      top: boolean,
+ *      right: boolean,
+ *      bottom: boolean,
+ *      left: boolean
+ *  },
+ *  icon: String,
+ *  clrsKey: String
+ * }} Walls
+ */
+
+/**
 * @type {{
-* boardSize: number,
-* tiles: Array<Array<Tile>>,
-* centerTiles: CenterTiles,
-* initPlayerTiles: Array<Tile>,
-* size: number,
-* offsetWidth: number,
-* offsetHeight: number,
-* margin: number,
-* players: Array<Player>,
-* availableTiles: Array<Tile>,
-* goalTiles: Array<Tile>,
-* moves: Array<String>,
-* currentGoalTile: Tile,
-* previousGoalTile: Tile,
-* map: {{}}
+*   boardSize: number,
+*   tiles: Array<Array<Tile>>,
+*   centerTiles: CenterTiles,
+*   initPlayerTiles: Array<Tile>,
+*   size: number,
+*   offsetWidth: number,
+*   offsetHeight: number,
+*   margin: number,
+*   players: Array<Player>,
+*   availableTiles: Array<Tile>,
+*   goalTiles: Array<Tile>,
+*   moves: Array<String>,
+*   currentGoalTile: Tile,
+*   previousGoalTile: Tile,
+*   mapStatic: {},
+*   mapJson: Array<{clrsKey: String, walls: Array<Walls>}>,
 * }}
 */
 const globals = {
@@ -35,7 +51,8 @@ const globals = {
     moves: [],
     currentGoalTile: null,
     previousGoalTile: null,
-    map: {},
+    mapStatic: {},
+    mapJson: [],
 };
 
 const tileClr = {
@@ -80,21 +97,16 @@ const clrs = {
 };
 
 function preload() {
-    globals.map = loadJSON("./mapQuarters.json");
+    globals.mapStatic = loadJSON("./mapQuartersStatic.json");
+    globals.mapJson = loadJSON("./mapQuarters.json");
 }
 
 function setup() {
     // put setup code here
-    // frameRate(1);
-
     createCanvas(windowWidth, window.innerHeight);
     
-    globals.map = globals.map[0]
+    globals.mapStatic = globals.mapStatic[0]
     loadMap();
-    loadWalls();
-    loadPlayers();
-    calculateTileSize();
-    setGoalTile();
 }
 
 function draw() {
@@ -120,9 +132,15 @@ function keyPressed(event) {
         switch (event.key) {
             case "F5":
                 event.preventDefault();
-                resetPlayers();
+                if (confirm("Reload page?")) {
+                    location.reload();
+                }
                 break;
             case "F6":
+                event.preventDefault();
+                resetPlayers();
+                break;
+            case "F7":
                 event.preventDefault();
                 setGoalTile();
                 break;
@@ -217,13 +235,6 @@ function drawGoalTiles() {
     if (globals.goalTiles.length === 0) return;
     
     globals.goalTiles.forEach(tile => {
-        // let halfSize = tile.size / 2
-        // let x = tile.x + halfSize;
-        // let y = tile.y + halfSize;
-        
-        // textSize(tile.size * 0.7);
-        // textAlign(CENTER, CENTER);
-        // text(tile.icon, x, y);
         tile.drawIcon();
 
         if (tile.clrsKey) {
@@ -276,7 +287,8 @@ function loadMap() {
     for (let i = 0; i < cols; i++) {
         globals.tiles.push([]);
         for (let j = 0; j < rows; j++) {
-            let tile = new Tile(i, j, 1);
+            let tile = new Tile(i, j);
+
             if (i === 0) tile.sides.left = true;
             if (j === 0) tile.sides.top = true;
             if (i === cols - 1) tile.sides.right = true;
@@ -296,24 +308,29 @@ function loadMap() {
     let center = globals.centerTiles;
     center.TL.sides.top = true;
     center.TL.sides.left = true;
-    center.TL.clr = clrs.blueClr;
     
     center.TR.sides.top = true;
     center.TR.sides.right = true;
-    center.TR.clr = clrs.yellowClr;
     
     center.BR.sides.right = true;
     center.BR.sides.bottom = true;
-    center.BR.clr = clrs.greenClr;
     
     center.BL.sides.bottom = true;
     center.BL.sides.left = true;
-    center.BL.clr = clrs.redClr;
+
+    // loadWalls();
+    loadWallsDynamic();
+    
+    // loadPlayers();
+    loadPlayersDynamic();
+    
+    calculateTileSize();
+    setGoalTile();
 }
 
 function loadWalls() {
-    Object.keys(globals.map).forEach(quarter =>{
-        globals.map[quarter].forEach(object => {
+    Object.keys(globals.mapStatic).forEach(quarter =>{
+        globals.mapStatic[quarter].forEach(object => {
             let tile = globals.tiles[object.i][object.j];
 
             let sides = Object.keys(object.sides);
@@ -327,6 +344,51 @@ function loadWalls() {
             };
         });
     });
+}
+
+function loadWallsDynamic() {
+    // let loadedQuarterIndexes = [];
+
+    /** @type {Array<String>} */
+    let loadedQuarterColorKeys = [];
+
+    let jsonLength =  Object.keys(globals.mapJson).length;
+    for (let q = 0; q < 4; q++) {
+        let quarterIndex = Math.floor(Math.random() * jsonLength);
+        let quarter = globals.mapJson[quarterIndex];
+
+        // if (loadedQuarterIndexes.includes(quarterIndex)) {
+        //     q--;
+        //     continue;
+        // }
+        if (loadedQuarterColorKeys.includes(quarter.clrsKey)) {
+            q--;
+            continue;
+        }
+
+        quarter.walls.forEach(wall => {
+            if (q > 0) rotateWall(wall, q);
+
+            let tile = globals.tiles[wall.i][wall.j];
+            let sides = Object.keys(wall.sides);
+            sides.forEach(key => {
+                tile.sides[key] = wall.sides[key];
+            });
+            if (sides.length > 1) {
+                tile.icon = wall.icon;
+                tile.clrsKey = wall.clrsKey;
+                globals.goalTiles.push(tile);
+            }
+
+            let centerTileKeys = Object.keys(globals.centerTiles);
+            /** @type {Tile} */
+            let centerTile = globals.centerTiles[centerTileKeys[q]];
+            assignColorsAtoB(centerTile.clr, clrs[quarter.clrsKey]);
+        });
+
+        // loadedQuarterIndexes.push(quarterIndex);
+        loadedQuarterColorKeys.push(quarter.clrsKey);
+    }
 }
 
 function loadPlayers() {
@@ -356,6 +418,39 @@ function loadPlayers() {
         globals.initPlayerTiles.push(tile);
     });
     
+}
+
+function loadPlayersDynamic() {
+    let quarters = availablePlayerPositions();
+    let quarterKeys = Object.keys(quarters);
+    shuffle(quarterKeys, true);
+
+    for (let p = 0; p < 4; p++) {
+        /** @type {Array<Tile>} */
+        let quarter = quarters[quarterKeys[p]];
+
+        let availablePositions = quarter.filter(tile => Object.values(tile.sides).every(side => !side));
+        let randomTile = availablePositions[Math.floor(Math.random() * availablePositions.length)]
+        
+        let playerClr;
+        if (randomTile.i < globals.centerTiles.TL.i && randomTile.j < globals.centerTiles.TL.j) {
+            playerClr = globals.centerTiles.TL.clr;
+        } else if (randomTile.i > globals.centerTiles.TR.i && randomTile.j < globals.centerTiles.TR.j) {
+            playerClr = globals.centerTiles.TR.clr;
+        } else if (randomTile.i > globals.centerTiles.BR.i && randomTile.j > globals.centerTiles.BR.j) {
+            playerClr = globals.centerTiles.BR.clr;
+        } else if (randomTile.i < globals.centerTiles.BL.i && randomTile.j > globals.centerTiles.BL.j) {
+            playerClr = globals.centerTiles.BL.clr;
+        }
+
+        let player = new Player(randomTile.i, randomTile.j, playerClr);
+        globals.players.push(player);
+
+        let tile = globals.tiles[player.i][player.j];
+        tile.clr = player.clr;
+        tile.hasPlayer = true;
+        globals.initPlayerTiles.push(tile);
+    }
 }
 
 function calculateTileSize() {
@@ -388,7 +483,7 @@ function availablePlayerPositions() {
     let cols = globals.boardSize;
     let rows = globals.boardSize;
 
-    /** @type {Quarters} temp */
+    /** @type {Quarters} */
     let temp = {
         A: [],
         B: [],
@@ -451,6 +546,9 @@ function setSelectedPlayer(clickedTile) {
     });
 }
 
+// ===== SET / RESET FUNCS =====
+
+// KeyPress: F6
 function resetPlayers() {
     globals.players.forEach(player => {
         let initTile = globals.initPlayerTiles.find(tile => tile.clr === player.clr);
@@ -461,10 +559,25 @@ function resetPlayers() {
         player.j = initTile.j;
 
         globals.tiles[player.i][player.j].hasPlayer = true;
+        player.isSelected = false;
     });
 
+    globals.availableTiles = [];
     globals.moves = [];
 }
+
+// KeyPress: F7
+function setGoalTile() {
+    globals.currentGoalTile = globals.goalTiles[Math.floor(Math.random() * globals.goalTiles.length)];
+    if (globals.previousGoalTile) {
+        if (compareGoalTiles(globals.currentGoalTile, globals.previousGoalTile)) {
+            setGoalTile();
+        }
+    }
+    globals.previousGoalTile = globals.currentGoalTile;
+}
+
+// ===== SET / RESET FUNCS =====
 
 /**
  * 
@@ -505,12 +618,158 @@ function compareGoalTiles(tileA, tileB) {
     );
 }
 
-function setGoalTile() {
-    globals.currentGoalTile = globals.goalTiles[Math.floor(Math.random() * globals.goalTiles.length)];
-    if (globals.previousGoalTile) {
-        if (compareGoalTiles(globals.currentGoalTile, globals.previousGoalTile)) {
-            setGoalTile();
+// ===== JSON WALL ROTATIONS =====
+
+/**
+ * @param {Walls} wall
+ * @param {number} noOfTimes
+ */
+function rotateWall(wall, noOfTimes) {
+    if (noOfTimes < 1 || noOfTimes > 3) return;
+
+    rotatePosition(wall, noOfTimes);
+    
+    let noOfSides = Object.keys(wall.sides).length;
+    if (noOfSides === 1) {
+        rotateSingleWalls(wall, noOfTimes);
+    } else {
+        rotateCorners(wall, noOfTimes);
+    }
+    
+}
+
+/**
+ * @param {Walls} wall
+ * @param {number} noOfTimes
+ */
+function rotatePosition(wall, noOfTimes) {
+    let i = wall.i;
+    let j = wall.j;
+    let maxIorJ = globals.boardSize - 1;
+
+    switch (noOfTimes) {
+        case 1:
+            wall.i = maxIorJ - j;
+            wall.j = i;
+            break;
+        case 2:
+            wall.i = maxIorJ - i;
+            wall.j = maxIorJ - j;
+            break;
+        case 3:
+            wall.i = j;
+            wall.j = maxIorJ - i;
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * @param {Walls} wall
+ * @param {number} noOfTimes
+ */
+function rotateCorners(wall, noOfTimes) {
+    let TR = wall.sides.top && wall.sides.right;
+    let RB = wall.sides.right && wall.sides.bottom;
+    let BL = wall.sides.bottom && wall.sides.left;
+    let LT = wall.sides.left && wall.sides.top;
+
+    if (noOfTimes === 1) { // one rotation; quarter B
+        if (TR) {
+            wall.sides.top = false;
+            wall.sides.bottom = true;
+        } else if (BL) {
+            wall.sides.bottom = false;
+            wall.sides.top = true;
+        } else if (RB || LT) {
+            wall.sides.right = false;
+            wall.sides.left = true;
+        }
+    } else if (noOfTimes === 2) { // two rotations; quarter C
+        if (TR) {
+            wall.sides.top = false;
+            wall.sides.right = false;
+            wall.sides.bottom = true;
+            wall.sides.left = true;
+        } else if (RB) {
+            wall.sides.right = false;
+            wall.sides.bottom = false;
+            wall.sides.left = true;
+            wall.sides.top = true;
+        } else if (BL) {
+            wall.sides.bottom = false;
+            wall.sides.left = false;
+            wall.sides.top = true;
+            wall.sides.right = true;
+        } else if (LT) {
+            wall.sides.left = false;
+            wall.sides.top = false;
+            wall.sides.right = true;
+            wall.sides.bottom = true;
+        }
+    } else if (noOfTimes === 3) { // three rotations; quarter D
+        if (TR) {
+            wall.sides.right = false;
+            wall.sides.left = true;
+        } else if (RB) {
+            wall.sides.bottom = false;
+            wall.sides.top = true;
+        } else if (BL || LT) {
+            wall.sides.left = false;
+            wall.sides.right = true;
         }
     }
-    globals.previousGoalTile = globals.currentGoalTile;
 }
+
+/**
+ * @param {Walls} wall
+ * @param {number} noOfTimes
+ */
+function rotateSingleWalls(wall, noOfTimes) {
+    if (noOfTimes === 1) {
+        if (wall.sides.top) {
+            delete wall.sides.top;
+            wall.sides.right = true;
+        } else if (wall.sides.right) {
+            delete wall.sides.right;
+            wall.sides.bottom = true;
+        } else if (wall.sides.bottom) {
+            delete wall.sides.bottom;
+            wall.sides.left = true;
+        } else if (wall.sides.left) {
+            delete wall.sides.left;
+            wall.sides.top = true;
+        }
+    } else if (noOfTimes === 2) {
+        if (wall.sides.top) {
+            delete wall.sides.top;
+            wall.sides.bottom = true;
+        } else if (wall.sides.right) {
+            delete wall.sides.right;
+            wall.sides.left = true;
+        } else if (wall.sides.bottom) {
+            delete wall.sides.bottom;
+            wall.sides.top = true;
+        } else if (wall.sides.left) {
+            delete wall.sides.left;
+            wall.sides.right = true;
+        }
+    } else if (noOfTimes === 3) {
+        if (wall.sides.top) {
+            delete wall.sides.top;
+            wall.sides.left = true;
+        } else if (wall.sides.right) {
+            delete wall.sides.right;
+            wall.sides.top = true;
+        } else if (wall.sides.bottom) {
+            delete wall.sides.bottom;
+            wall.sides.right = true;
+        } else if (wall.sides.left) {
+            delete wall.sides.left;
+            wall.sides.bottom = true;
+        }
+    }
+}
+
+// ===== JSON WALL ROTATIONS =====
