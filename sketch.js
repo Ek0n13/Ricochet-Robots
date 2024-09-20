@@ -250,19 +250,23 @@ function drawGoalTiles() {
 function drawText() {
     let firstTile = globals.tiles[0][0];
     let tileOffset = globals.size;
-    let txtOffset = globals.size * 2.25;
+    let txtOffset = globals.size * 1.85;
 
-    let tileX = firstTile.x - tileOffset;
+    let tileX = firstTile.x;
+    let tileXoff = firstTile.x + tileOffset * 1.4;
     let tileY = firstTile.y;
+    let tileYoff = firstTile.y - tileOffset;
     let tileSize = firstTile.size * 0.75;
     
-    let textX = firstTile.x - txtOffset;
+    let textX = firstTile.x;
+    let textXoff = firstTile.x - txtOffset;
     let textY = firstTile.y;
+    let textYoff = firstTile.y - txtOffset;
     let txtSize = firstTile.size * 0.5;
     
 
     let menuText = "";
-    menuText += `\n\nMoves:\n${globals.moves.length}`;
+    menuText += `Moves:\n${globals.moves.length}`;
     for (let i = 0; i < globals.moves.length; i++) {
         if (i % 2 === 0) {
             menuText += "\n"
@@ -270,14 +274,15 @@ function drawText() {
         menuText += `${globals.moves[i]}`;
     }
 
-    globals.currentGoalTile.drawCustom(tileX, tileY, tileSize);
-    globals.currentGoalTile.drawIconCustom(tileX, tileY, tileSize);
+    globals.currentGoalTile.drawCustom(tileXoff, tileYoff, tileSize);
+    globals.currentGoalTile.drawIconCustom(tileXoff, tileYoff, tileSize);
     
     fill(0);
     textSize(txtSize);
+    textAlign(LEFT, BOTTOM);
+    text("Goal:", textX, tileY * 0.9);
     textAlign(LEFT, TOP);
-    text("Goal:", textX, tileY);
-    text(menuText, textX, textY);
+    text(menuText, textXoff, textY);
 }
 
 /**
