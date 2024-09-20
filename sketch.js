@@ -144,6 +144,9 @@ function keyPressed(event) {
                 event.preventDefault();
                 setGoalTile();
                 break;
+            case "F8":
+                event.preventDefault();
+                refreshPlayers();
             default:
                 break;
         }
@@ -238,7 +241,7 @@ function drawGoalTiles() {
         tile.drawIcon();
 
         if (tile.clrsKey) {
-            assignColorsAtoB(tile.clr, clrs[tile.clrsKey]);
+            assignColorsBtoA(tile.clr, clrs[tile.clrsKey]);
             tile.clr.A = 150;
         }
     });
@@ -383,7 +386,7 @@ function loadWallsDynamic() {
             let centerTileKeys = Object.keys(globals.centerTiles);
             /** @type {Tile} */
             let centerTile = globals.centerTiles[centerTileKeys[q]];
-            assignColorsAtoB(centerTile.clr, clrs[quarter.clrsKey]);
+            assignColorsBtoA(centerTile.clr, clrs[quarter.clrsKey]);
         });
 
         // loadedQuarterIndexes.push(quarterIndex);
@@ -446,12 +449,14 @@ function loadPlayersDynamic() {
         let player = new Player(randomTile.i, randomTile.j, playerClr);
         globals.players.push(player);
 
-        let tile = globals.tiles[player.i][player.j];
-        tile.clr = player.clr;
-        tile.hasPlayer = true;
-        globals.initPlayerTiles.push(tile);
+        let playerTile = globals.tiles[player.i][player.j];
+        playerTile.clr = playerClr;
+        playerTile.hasPlayer = true;
+        globals.initPlayerTiles.push(playerTile);
     }
 }
+
+
 
 function calculateTileSize() {
     let smallSide = Math.min(windowWidth, windowHeight);
@@ -551,7 +556,7 @@ function setSelectedPlayer(clickedTile) {
 // KeyPress: F6
 function resetPlayers() {
     globals.players.forEach(player => {
-        let initTile = globals.initPlayerTiles.find(tile => tile.clr === player.clr);
+        let initTile = globals.initPlayerTiles.find(tile => compareColorsRGB(tile.clr, player.clr));
         
         globals.tiles[player.i][player.j].hasPlayer = false;
 
@@ -559,6 +564,7 @@ function resetPlayers() {
         player.j = initTile.j;
 
         globals.tiles[player.i][player.j].hasPlayer = true;
+
         player.isSelected = false;
     });
 
@@ -577,6 +583,48 @@ function setGoalTile() {
     globals.previousGoalTile = globals.currentGoalTile;
 }
 
+// KeyPress: F8
+function refreshPlayers() {
+    let quarters = availablePlayerPositions();
+    let quarterKeys = Object.keys(quarters);
+
+    globals.players = [];
+    globals.initPlayerTiles.forEach(tile =>  {
+        tile.clr = tileClr;
+        tile.hasPlayer = false;
+    })
+    globals.initPlayerTiles = [];
+
+    for (let p = 0; p < 4; p++) {
+        let quarter = quarters[quarterKeys[p]];
+
+        let availablePositions = quarter.filter(tile => Object.values(tile.sides).every(side => !side));
+        let randomTile = availablePositions[Math.floor(Math.random() * availablePositions.length)]
+
+        let playerClr;
+        if (randomTile.i < globals.centerTiles.TL.i && randomTile.j < globals.centerTiles.TL.j) {
+            playerClr = globals.centerTiles.TL.clr;
+        } else if (randomTile.i > globals.centerTiles.TR.i && randomTile.j < globals.centerTiles.TR.j) {
+            playerClr = globals.centerTiles.TR.clr;
+        } else if (randomTile.i > globals.centerTiles.BR.i && randomTile.j > globals.centerTiles.BR.j) {
+            playerClr = globals.centerTiles.BR.clr;
+        } else if (randomTile.i < globals.centerTiles.BL.i && randomTile.j > globals.centerTiles.BL.j) {
+            playerClr = globals.centerTiles.BL.clr;
+        }
+
+        let newPlayer = new Player(randomTile.i, randomTile.j, playerClr);
+        globals.players.push(newPlayer);
+
+        let playerTile = globals.tiles[randomTile.i][randomTile.j];
+        playerTile.clr = playerClr;
+        playerTile.hasPlayer = true;
+        globals.initPlayerTiles.push(playerTile);
+    }
+
+    calculateTileSize();
+    resetPlayers();
+}
+
 // ===== SET / RESET FUNCS =====
 
 /**
@@ -584,7 +632,7 @@ function setGoalTile() {
  * @param {{R, G, B, A}} colorA 
  * @param {{R, G, B, A}} colorB 
  */
-function assignColorsAtoB(colorA, colorB) {
+function assignColorsBtoA(colorA, colorB) {
     colorA.R = colorB.R;
     colorA.G = colorB.G;
     colorA.B = colorB.B;
