@@ -250,7 +250,7 @@ function drawGoalTiles() {
 function drawText() {
     let firstTile = globals.tiles[0][0];
     let tileOffset = globals.size;
-    let txtOffset = globals.size * 1.85;
+    let txtOffset = globals.size * 2.25;
 
     let tileX = firstTile.x;
     let tileXoff = firstTile.x + tileOffset * 1.4;
